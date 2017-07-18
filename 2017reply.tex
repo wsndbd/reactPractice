@@ -47,7 +47,7 @@
 \end{frame}
 
 \section{工作内容}
-
+								
 \begin{frame}{特殊诱导系统-挑战}
   \begin{itemize}
     \item 数据错误多，可控性差，如何追上竞品
@@ -97,11 +97,32 @@
 \end{frame}
 
 \begin{frame}{iOS热更新-方案1优缺点}
+  优点
   \begin{itemize}
-    \item 使用JS重写引擎 
+    \item 可控性强
+    \item 性能优化空间大
+    \item 后台服务不需要修改
     \item 策略全部可写入配置文件，后台修改，灵活性差，复杂策略难以实现
 	\item 开源编译器
 	\end{itemize}
+  缺点
+  \begin{itemize}
+    \item 需要人力
+    \item 需要保证两个版本统一
+    \item 开发时间长
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{iOS热更新-方案2优缺点}
+  优点
+  \begin{itemize}
+    \item 技术可控
+	\end{itemize}
+  缺点
+  \begin{itemize}
+    \item 配置文件规则复杂
+    \item 复杂
+  \end{itemize}
 \end{frame}
 
 \section{Elements}
