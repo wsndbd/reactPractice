@@ -211,7 +211,14 @@
 	\begin{exampleblock}{解决方案}
 		\begin{itemize}
 			\item 利用离线导航模式，仅用一个月时间完成了离线编译器，诱导引擎的工作，实际路测OK
-			\item 利用二次索引的方式而不改变数据块头的结构，保证了兼容性
+			\item 利用二次索引的方式保证不改变数据块头的结构，保证了兼容性
+		\end{itemize}
+	\end{exampleblock}
+		\alert{挑战-如何验证新改策略的效果？}
+	\begin{exampleblock}{解决方案}
+		\begin{itemize}
+			\item 新增goodcase,badcase库
+			\item 增加回流机制发现用户问题
 		\end{itemize}
 	\end{exampleblock}
 %	\begin{exampleblock}{应对}
