@@ -4,16 +4,39 @@
 \usepackage{appendixnumberbeamer}
 
 \usepackage{booktabs}
+
 \usepackage{xspace}
 \newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
-
+\usepackage{tabularx}
 \usepackage{graphicx}
-\usepackage{CTEX}
-\setmainfont{Microsoft YaHei}
-\setCJKmainfont{Microsoft YaHei}
+\usepackage{subfigure}
+%\usepackage{CTEX}
+%\setmainfont{Microsoft YaHei}
+%\setCJKmainfont{Microsoft YaHei}
+\usepackage{array}
+%\usepackage{math}
+\newcolumntype{R}{>{\begin{math}}r<{\end{math}}}
+	\usepackage{xeCJK}
+\setCJKmainfont{MicrosoftYaHeiUILight}
+\uselanguage{chinese}
+\languagepath{chinese}
+
+% 设置翻译
+\deftranslation[to=chinese]{Contents}{目录}
+\deftranslation[to=chinese]{Table}{\small 表}
+\deftranslation[to=chinese]{Figure}{\footnotesize 图}
+\deftranslation[to=chinese]{Theorem}{定理}
+\deftranslation[to=chinese]{Corollary}{推论}
+\deftranslation[to=chinese]{Definition}{定义}
+\deftranslation[to=chinese]{Definitions}{定义}
+\deftranslation[to=chinese]{Lemma}{引理}
+\deftranslation[to=chinese]{Problem}{问题}
+\deftranslation[to=chinese]{Solution}{解}
+\deftranslation[to=chinese]{Fact}{事实}
+\deftranslation[to=chinese]{Proof}{证明}
 
 \title{移动客户端开发通道面试陈述}
-\subtitle{适用3级评审}
+% \subtitle{适用3级评审}
 % \date{\today}
 %\date{}
 \author{张仁昌}
@@ -25,8 +48,8 @@
 \maketitle
 
 \begin{frame}{内容}
-  \setbeamertemplate{section in toc}[sections numbered]
-  \tableofcontents[hideallsubsections]
+	\setbeamertemplate{section in toc}[sections numbered]
+	\tableofcontents[hideallsubsections]
 \end{frame}
 
 \section{个人经历}
@@ -39,250 +62,383 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{主要工作成果}
-	\begin{itemize}
-		\item 特殊诱导系统
-		\item iOS平台诱导引擎hotfix
-	\end{itemize}
+\begin{frame}[fragile]{近期主要工作成果}
+	\begin{exampleblock}{}
+		\begin{itemize}
+			\item 特殊诱导系统
+			\item iOS诱导引擎热更新
+            \item 诱导引擎重构架构设计
+            \item 王者荣耀诱导语音引擎
+			\item 诱导引擎微信小程序移植
+		\end{itemize}
+	\end{exampleblock}
 \end{frame}
 
-\section{工作内容}
-								
-\begin{frame}{特殊诱导系统-挑战}
-  \begin{itemize}
-    \item 数据错误多，可控性差，如何追上竞品
-    \item 复杂路口，程序分析能力有限
-  \end{itemize}
+\section{特殊诱导系统}
+\begin{frame}{特殊诱导系统-背景}
+	\begin{exampleblock}{用户看不懂地图}
+		\begin{itemize}
+			\item 手图转向标与实际路口不符
+			\item 播报听不懂、不明确
+		\end{itemize}
+	\end{exampleblock}
+	\begin{exampleblock}{问题原因}
+		\begin{itemize}
+			\item 数据制作错误
+			\item 路口太复杂，算法分析能力有限
+			\item 数据、算法都没有错，人的感知不一样
+		\end{itemize}
+	\end{exampleblock}
 \end{frame}
 
-\begin{frame}{特殊诱导系统-修改前}
-\includegraphics[width = 1.0\textwidth]{picture/before_specialguidance.pdf}
+\begin{frame}{特殊诱导系统badcase-数据问题}
+	\begin{figure}
+		\begin{minipage}[htbp]{0.45\textwidth}
+			\centering
+				\includegraphics[width = 0.45\columnwidth, height=0.45\columnwidth]{picture/data_3to1.png}
+				\includegraphics[width = 0.45\columnwidth, height = 0.45\columnwidth]{picture/data_3to1_para.png}
+				\caption{数据错误}
+		\end{minipage}
+					\begin{minipage}[htbp]{0.45\textwidth}
+						\centering
+						\includegraphics[width = 0.45\columnwidth, height = 0.45\columnwidth]{picture/data_3to21.png}
+						\includegraphics[width = 0.45\columnwidth, height = 0.45\columnwidth]{picture/data_3to21_para.png}
+						\caption{右转专用道属性做错}
+					\end{minipage}
+
+					\begin{minipage}[htbp]{0.45\textwidth}
+						\centering
+						\includegraphics[width = 0.45\columnwidth, height = 0.45\columnwidth]{picture/data_2360_6to81.png}
+						\includegraphics[width = 0.45\columnwidth, height = 0.45\columnwidth]{picture/data_2360_6to81_para.png}
+						\caption{入边做成辅路}
+					\end{minipage}	
+					\begin{minipage}[htbp]{0.45\textwidth}
+						\centering
+						\includegraphics[width = 0.45\columnwidth, height = 0.45\columnwidth]{picture/data_3102_8to1.png}
+						\includegraphics[width = 0.45\columnwidth, height = 0.45\columnwidth]{picture/data_3102_8to1_para.png}
+						\caption{内link做成普通路}
+					\end{minipage}	
+	\end{figure}	
 \end{frame}
 
-\begin{frame}{特殊诱导系统-修改后}
-\includegraphics[width = 1.0\textwidth]{picture/after_specialguidance.pdf}
+\begin{frame}{特殊诱导系统badcase-策略问题}
+	\begin{figure}
+		\begin{minipage}[htbp]{0.45\textwidth}
+			\centering
+				\includegraphics[width = 0.5\columnwidth, height=0.5\columnwidth]{picture/program_22to3.png}
+				\includegraphics[width = 0.5\columnwidth, height = 0.5\columnwidth]{picture/program_22to3_para.png}
+				\caption{延伸失败}
+		\end{minipage}
+					\begin{minipage}[htbp]{0.45\textwidth}
+						\centering
+						\includegraphics[width = 0.5\columnwidth, height = 0.5\columnwidth]{picture/program_211_3to23.png}
+						\includegraphics[width = 0.5\columnwidth, height = 0.5\columnwidth]{picture/program_22to3_para.png}
+						\caption{复杂难以分析}
+					\end{minipage}
+
+					\begin{minipage}[htbp]{0.45\textwidth}
+						\centering
+						\includegraphics[width = 0.5\columnwidth, height = 0.5\columnwidth]{picture/program_2695_7to8.png}
+						\includegraphics[width = 0.5\columnwidth, height = 0.5\columnwidth]{picture/program_2695_7to8_para.png}
+						\caption{难以分析}
+					\end{minipage}	
+					\begin{minipage}[htbp]{0.45\textwidth}
+						\centering
+						\includegraphics[width = 0.5\columnwidth, height = 0.5\columnwidth]{picture/program_2787_miss_turnround.png}
+						\includegraphics[width = 0.5\columnwidth, height = 0.5\columnwidth]{picture/program_2787_miss_turnround_para.png}
+						\caption{掉头路太长分析错误}
+					\end{minipage}	
+	\end{figure}	
+\end{frame}
+
+\begin{frame}{特殊诱导系统-目标}
+	\begin{exampleblock}{需要设计一个系统，完美解决以下问题}
+		\begin{itemize}
+			\item 目标：数据或策略错误的位置，必须纠正
+			\item 目标：不符合人的行为的位置，尽量纠正使人理解
+			\item 目标：如果数据或引擎出错，具备快速更新的能力
+			\item 目标：修改策略后效果的验证
+			\item 目标：变被动接收问题为主动收集问题
+		\end{itemize}
+	\end{exampleblock}
+	\begin{exampleblock{核心思想}
+		\begin{itemize}
+			\item 特殊诱导中间层数据
+			\item 诱导策略的发现，修改，验证，回流的闭环，需要修改图
+		\end{itemize}
+	\end{exampleblock}
+%	\begin{exampleblock}{应对}
+%		\begin{itemize}
+%			\item 增加中间层数据
+%			\item 快速更新引擎的能力
+%		\end{itemize}
+%	\end{exampleblock}
+\end{frame}
+
+%\begin{frame}{特殊诱导系统-挑战及应对}
+%	\begin{exampleblock}{挑战}
+%		\begin{itemize}
+%			\item 数据错误多，可控性差，如何追上竞品
+%			\item 特殊路口，程序分析能力有限
+%		\end{itemize}
+%	\end{exampleblock}
+%	\begin{exampleblock}{应对}
+%		\begin{itemize}
+%			\item 增加中间层数据
+%			\item 快速更新引擎的能力
+%		\end{itemize}
+%	\end{exampleblock}
+%\end{frame}
+
+\begin{frame}{特殊诱导系统-原有结构图}
+	\includegraphics[width = 1.0\textwidth]{picture/before_specialguidance.png}
+\end{frame}
+
+\begin{frame}{特殊诱导系统-期望结构图}
+	\includegraphics[width = 1.0\textwidth]{picture/after_specialguidance.png}
+\end{frame}
+
+\begin{frame}{特殊诱导系统-挑战及应对}
+	\alert{挑战-特殊诱导数据如何存储方式？}
+	\begin{exampleblock}{解决方案}
+		\begin{itemize}
+			\item 使用postgres数据库作为展示，操作数据
+			\item 使用mif数据作为编译数据
+			\item 编写导出脚本保证数据一致性-流程图画错要修改
+		\end{itemize}
+	\end{exampleblock}
+	\alert{挑战-如何在早期验证方案可行性？}
+	\begin{exampleblock}{解决方案}
+		\begin{itemize}
+			\item 利用离线导航模式，仅用一个月时间完成了离线编译器，诱导引擎的工作，实际路测OK
+			\item 利用二次索引的方式而不改变数据块头的结构，保证了兼容性
+		\end{itemize}
+	\end{exampleblock}
+%	\begin{exampleblock}{应对}
+%		\begin{itemize}
+%			\item 增加中间层数据
+%			\item 快速更新引擎的能力
+%		\end{itemize}
+%	\end{exampleblock}
 \end{frame}
 
 \begin{frame}{特殊诱导系统-流程图}
-\includegraphics[width = 1.0\textwidth]{picture/specialguidance_flowchart.pdf}
+	\includegraphics[width = 1.0\textwidth]{picture/specialguidance_flowchart.png}
 \end{frame}
 
-\begin{frame}{特殊诱导系统-对比数据}
-  \begin{itemize}
-    \item 与高德模型数据的对比
-    \item sgn与gcn数量
-  \end{itemize}
+\begin{frame}{特殊诱导系统-与高德对比数据}
+	\begin{table}
+		\caption{各版本路口转向对比}
+					\begin{tabularx}{0.9\textwidth}{X|X|X|X|X}
+						\toprule 
+						\footnotesize 版本 & \footnotesize 相同路口数 & \footnotesize 缺失路口数 & \footnotesize 不同路口数 & \footnotesize 多出路口数\\
+						\midrule
+						6.1 & 57.00\% & 11.21\% & 7.02\% & 24.00\%\\
+						6.2 & 61.70\% & 12.74\% & 5.35\% & 20.21\%\\
+						6.3 & 74.73\% & 11.68\% & 5.53\% & 8.06\%\\
+						6.4 & 75.83\% & 10.72\% & 5.69\% & 7.76\%\\
+						6.5 & 78.35\% & 9.93\% & 5.25\% & 6.47\%\\
+						6.6 & 78.86\% & 9.55\% & 4.68\% & 6.42\%\\
+						6.7 & 79.27\% & 9.73\% & 4.28\% & 6.22\%\\
+						6.8 & 78.87\% & 10.15\% & 4.52\% & 6.11\%\\
+						6.9 & 79.75\% & 10.03\% & 4.61\% & 5.30\%\\
+						\bottomrule
+					\end{tabularx}
+	\end{table}      
 \end{frame}
 
-\begin{frame}{特殊诱导系统-TODO List}
-  \begin{itemize}
-    \item 分析回流数据
-    \item 诱导策略的验证
-  \end{itemize}
+\begin{frame}{特殊诱导系统-差异路口对比数据}
+	\begin{columns}[T,onlytextwidth]
+		\column{0.45\textwidth}
+		\begin{table}
+			\caption{特殊诱导数据}
+							\begin{tabularx}{\textwidth}{XX}
+								\toprule
+									类型 & 数量\\
+									\midrule
+									%select count(*) from specialguidance where type=1 and actionid is NULL
+									特殊转向 & 3783\\
+									%select count(*) from specialguidance where type=1 and actionid is not NULL
+									特殊播报 & 90\\
+									%select count(*) from specialguidance where state = 3
+									车道线 & 5\\
+									%select count(*) from specialguidance where state = 3
+									特殊单点 & 15\\
+									\bottomrule
+							\end{tabularx}
+		\end{table}		
+		\column{0.45\textwidth}
+		\begin{table}
+			\caption{验证库数据}
+							\begin{tabularx}{\textwidth}{XX}
+								\toprule
+									类型 & 数量\\
+									\midrule
+									%select count(*) from tracks where state = 1
+									good case & 41896\\
+									bad case & 1019\\
+									invalid & 369\\
+									未检测 & 19403\\
+									\bottomrule
+							\end{tabularx}
+		\end{table}		
+	\end{columns}
+	\begin{columns}[T,onlytextwidth]
+		\column{0.45\textwidth}
+		\begin{table}
+			\caption{人工采样校验}
+					\begin{tabularx}{1\textwidth}{XXX}
+						\toprule
+						版本 & 腾讯好 & 高德好\\
+						\midrule
+						6.6 & 5.70\% & 3.02\%\\
+						6.7 & 79.27\% & 9.73\%\\
+						\bottomrule
+					\end{tabularx}
+		\end{table}
+		\column{0.45\textwidth}
+			\begin{table}
+				\caption{实际路测}
+					\begin{tabularx}{1\textwidth}{XXX}
+						\toprule
+						城市 & 腾讯准 & 高德准\\
+						\midrule
+						上海 & 86.44\% & 86.44\%\\
+						深圳 & 85.77\% & 77.88\%\\
+						\bottomrule
+					\end{tabularx}
+			\end{table}
+	\end{columns}
 \end{frame}
+
+\begin{frame}{特殊诱导系统-总结}
+	\begin{exampleblock}{总结}
+		\begin{itemize}
+			\item 建立了诱导策略的发现，回流，修复的闭环
+			\item 模型准确率已经超过高德
+		\end{itemize}
+	\end{exampleblock}
+	\begin{exampleblock}{todo}
+		\begin{itemize}
+			\item 诱导策略的追赶
+			\item 参考点，电子眼，车道线策略的逐步更新
+		\end{itemize}
+	\end{exampleblock}
+\end{frame}
+
+\section{诱导引擎热更新}
 
 \begin{frame}{iOS热更新-问题}
-  \begin{itemize}
-    \item 苹果审核慢，重大问题不能及时更新
-    \item 引擎大部分功能独立客户端，需要加快迭代速度
-  \end{itemize}
+	\begin{itemize}
+		\item 苹果审核慢，重大问题不能及时更新
+		\item 引擎大部分功能独立客户端，需要加快迭代速度
+	\end{itemize}
 \end{frame}
 
 \begin{frame}{iOS热更新-方案选择}
-  \begin{itemize}
-    \item 使用JS重写引擎
-    \item 策略全部可写入配置文件
-	\item 开源编译器
+	\begin{itemize}
+		\item 使用JS重写引擎
+		\item 策略全部写入配置文件
+		\item 编译器翻译到JS
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{iOS热更新-方案1优缺点}
-  优点
-  \begin{itemize}
-    \item 可控性强
-    \item 性能优化空间大
-    \item 后台服务不需要修改
-    \item 策略全部可写入配置文件，后台修改，灵活性差，复杂策略难以实现
-	\item 开源编译器
-	\end{itemize}
-  缺点
-  \begin{itemize}
-    \item 需要人力
-    \item 需要保证两个版本统一
-    \item 开发时间长
-  \end{itemize}
+	\begin{exampleblock}{优点}
+		\begin{itemize}
+			\item 可控性强
+			\item 性能优化空间大
+			\item 后台服务不需要修改
+		\end{itemize}
+	\end{exampleblock}
+	\begin{exampleblock}{缺点}
+		\begin{itemize}
+			\item 需要人力
+			\item 需要保证两个版本统一
+			\item 开发时间长
+		\end{itemize}
+	\end{exampleblock}
 \end{frame}
 
 \begin{frame}{iOS热更新-方案2优缺点}
-  优点
-  \begin{itemize}
-    \item 技术可控
+	\begin{exampleblock}{优点}
+		\begin{itemize}
+			\item 技术可控
+			\item 无需新语言
+		\end{itemize}
+	\end{exampleblock}
+	\begin{exampleblock}{缺点}
+		\begin{itemize}
+			\item 需要后台服务配合修改
+			\item 配置文件规则复杂
+			\item 灵活性差
+			\item 复杂策略难以实现
+		\end{itemize}
+	\end{exampleblock}
+\end{frame}
+
+\begin{frame}{iOS热更新-方案3优缺点}
+	\begin{exampleblock}{优点}
+		\begin{itemize}
+			\item 后台服务不需要修改
+			\item 双版本内容一致
+			\item 无需额外开发人员
+		\end{itemize}
+	\end{exampleblock}
+	\begin{exampleblock}{缺点}
+		\begin{itemize}
+			\item C与JS交互部分数据传递
+			\item 回调函数处理
+			\item 可控性较低
+		\end{itemize}
+	\end{exampleblock}
+\end{frame}
+
+\begin{frame}{热更新-类图}
+	\includegraphics[width = 1.0\textwidth]{picture/hotfix_class_diagram.png}
+\end{frame}
+
+\begin{frame}{热更新-流程图}
+	\includegraphics[width = 1.0\textwidth]{picture/hotfix_flowchart.png}
+\end{frame}
+
+\section{总结}
+
+\begin{frame}{专业领域专长}
+	\alert{专业领域专长}
+	\begin{itemize}
+		\item 熟悉地图各个模块的内容（搜索，地图，算路，诱导）
+		\item 擅长跨平台开发
+		\item 独自完成基于卡尔曼滤波的误偏航优化项目，误偏航次数减少53\%
+		\item 站在更高的角度看问题，对一个问题习惯放在一个系统中考虑
 	\end{itemize}
-  缺点
-  \begin{itemize}
-    \item 配置文件规则复杂
-    \item 复杂
-  \end{itemize}
 \end{frame}
 
-\section{Elements}
-
-\begin{frame}[fragile]{Typography}
-      \begin{verbatim}The theme provides sensible defaults to
-\emph{emphasize} text, \alert{accent} parts
-or show \textbf{bold} results.\end{verbatim}
-
-  \begin{center}becomes\end{center}
-
-  The theme provides sensible defaults to \emph{emphasize} text,
-  \alert{accent} parts or show \textbf{bold} results.
+\begin{frame}{专业影响力和贡献}
+	\alert{专业影响力和贡献}
+	\begin{itemize}
+		\item 跟产品同学分享自己多年的导航经验，主导了腾讯地图诱导引擎的开发
+		\item 指导组内员工完成导航引擎重构，实现部分诱导策略可配 
+		\item 担任过一次新员工导师
+		\item 对诱导数据回流项目进行设计上的修正
+	\end{itemize}
+	\alert{KM文章}
+	\begin{itemize}
+		\item http://km.oa.com/articles/show/293334
+		\item http://km.oa.com/articles/show/281996 
+		\item http://km.oa.com/articles/show/291038
+	\end{itemize}	
 \end{frame}
 
-\begin{frame}{Font feature test}
-  \begin{itemize}
-    \item Regular
-    \item \textit{Italic}
-    \item \textsc{SmallCaps}
-    \item \textbf{Bold}
-    \item \textbf{\textit{Bold Italic}}
-    \item \textbf{\textsc{Bold SmallCaps}}
-    \item \texttt{Monospace}
-    \item \texttt{\textit{Monospace Italic}}
-    \item \texttt{\textbf{Monospace Bold}}
-    \item \texttt{\textbf{\textit{Monospace Bold Italic}}}
-  \end{itemize}
+\begin{frame}{感想}
+	\begin{itemize}
+		\item 地图行业不论发展到什么地步，最核心竞争力始终是基础能力，即定位、查询、规划、导航的综合能力。
+		\item 细节决定成败。
+	\end{itemize}
 \end{frame}
 
-\begin{frame}{Lists}
-  \begin{columns}[T,onlytextwidth]
-    \column{0.33\textwidth}
-      Items
-      \begin{itemize}
-        \item Milk \item Eggs \item Potatos
-      \end{itemize}
-
-    \column{0.33\textwidth}
-      Enumerations
-      \begin{enumerate}
-        \item First, \item Second and \item Last.
-      \end{enumerate}
-
-    \column{0.33\textwidth}
-      Descriptions
-      \begin{description}
-        \item[PowerPoint] Meeh. \item[Beamer] Yeeeha.
-      \end{description}
-  \end{columns}
-\end{frame}
-\begin{frame}{Animation}
-  \begin{itemize}[<+- | alert@+>]
-    \item \alert<4>{This is\only<4>{ really} important}
-    \item Now this
-    \item And now this
-  \end{itemize}
-\end{frame}
-\begin{frame}{Tables}
-  \begin{table}
-    \caption{Largest cities in the world (source: Wikipedia)}
-    \begin{tabular}{lr}
-      \toprule
-      City & Population\\
-      \midrule
-      Mexico City & 20,116,842\\
-      Shanghai & 19,210,000\\
-      Peking & 15,796,450\\
-      Istanbul & 14,160,467\\
-      \bottomrule
-    \end{tabular}
-  \end{table}
-\end{frame}
-\begin{frame}{Blocks}
-  Three different block environments are pre-defined and may be styled with an
-  optional background color.
-
-  \begin{columns}[T,onlytextwidth]
-    \column{0.5\textwidth}
-      \begin{block}{Default}
-        Block content.
-      \end{block}
-
-      \begin{alertblock}{Alert}
-        Block content.
-      \end{alertblock}
-
-      \begin{exampleblock}{Example}
-        Block content.
-      \end{exampleblock}
-
-    \column{0.5\textwidth}
-
-      \metroset{block=fill}
-
-      \begin{block}{Default}
-        Block content.
-      \end{block}
-
-      \begin{alertblock}{Alert}
-        Block content.
-      \end{alertblock}
-
-      \begin{exampleblock}{Example}
-        Block content.
-      \end{exampleblock}
-
-  \end{columns}
-\end{frame}
-\begin{frame}{Math}
-  \begin{equation*}
-    e = \lim_{n\to \infty} \left(1 + \frac{1}{n}\right)^n
-  \end{equation*}
-\end{frame}
-\begin{frame}{Quotes}
-  \begin{quote}
-    Veni, Vidi, Vici
-  \end{quote}
-\end{frame}
-
-\section{Conclusion}
-
-\begin{frame}{Summary}
-
-  Get the source of this theme and the demo presentation from
-
-  \begin{center}\url{github.com/matze/mtheme}\end{center}
-
-  The theme \emph{itself} is licensed under a
-  \href{http://creativecommons.org/licenses/by-sa/4.0/}{Creative Commons
-  Attribution-ShareAlike 4.0 International License}.
-
-  \begin{center}\ccbysa\end{center}
-
-\end{frame}
-
-{\setbeamercolor{palette primary}{fg=black, bg=yellow}
-\begin{frame}[standout]
-  Questions?
-\end{frame}
-}
-
-\appendix
-
-\begin{frame}[fragile]{Backup slides}
-  Sometimes, it is useful to add slides at the end of your presentation to
-  refer to during audience questions.
-
-  The best way to do this is to include the \verb|appendixnumberbeamer|
-  package in your preamble and call \verb|\appendix| before your backup slides.
-
-  \themename will automatically turn off slide numbering and progress bars for
-  slides in the appendix.
-\end{frame}
-
-\begin{frame}[allowframebreaks]{References}
-
-  \bibliography{demo}
-  \bibliographystyle{abbrv}
-
+\begin{frame}{}
+	谢谢
 \end{frame}
 
 \end{document}
